@@ -1,26 +1,25 @@
 import numpy
-import itertools
-from tqdm import tqdm
+import re
 
 def Get_MobyDick_Data(WordsOrCaraktors):
     MobyDickDataArray=[]
     # We wish the data array to be in Caraktors
     if WordsOrCaraktors == "C":
-        print("C")
+        print("Character Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = list(x)   # You can still print the lines if you need to debug
+                    x = list(x)   
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
     # We wish the data array to be in Words
     else:
-        print("Words chousen")
+        print("Words Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = x.split()   # You can still print the lines if you need to debug
+                    x = re.findall(r'[A-Za-z]+|[^A-Za-z]+', x)
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
@@ -78,41 +77,41 @@ def HaffPoint(EntropyList):
         return HaffPoint - 1
 
 def SHANNON(EntropyList, prefix=""):
-    # Base case: only one symbol remains
     if len(EntropyList) == 1:
         symbol = EntropyList[0][0]
         return {symbol: prefix}
 
-    # Find the splitting point
     split_idx = HaffPoint(EntropyList)
 
-    # Split the list into two groups
     left = EntropyList[:split_idx + 1]
     right = EntropyList[split_idx + 1:]
 
-    # Recursively assign codes to each group
     codes = {}
     codes.update(SHANNON(left, prefix + "0"))  # Assign "0" to the left group
     codes.update(SHANNON(right, prefix + "1"))  # Assign "1" to the right group
 
     return codes
 
-def main():
-    #Test()
-    print("Shannon")
-    Data = Get_MobyDick_Data("C")
-    Hx, EntropyList = Entropy(Data)
-    print(f"Entropy: {Hx:.4f}")
-    print("Working on SHANNON Algurythm ...")
-    codes = SHANNON(EntropyList)
-    print("Shannon Codes:")
+def EvalueateShannon(codes, EntropyList):
     ip = 0
     sum = 0
     for symbol, code in codes.items():
         #print(f"Symbol: {repr(symbol)} -> Code: {code}" + " Prob : " + str(EntropyList[ip][1]))
         sum += len(code) * EntropyList[ip][1]
         ip += 1
-    print("Algurythm entrop : " + str(sum) + f" Entropy: {Hx:.4f}")
+    return sum
+
+def main():
+    print("Shannon")
+    Data = Get_MobyDick_Data("W") # C = carakters W = Words
+    print("Working On Entropy Calculations ...")
+    Hx, EntropyList = Entropy(Data)
+    print(f"Entropy: {Hx:.4f}")
+    print("Working on SHANNON Algorithm ...")
+    codes = SHANNON(EntropyList)
+    print("Shannon Codes: can be shown in [def EvalueateShannon]")
+    sum = EvalueateShannon(codes, EntropyList)
+    print("Algorithm Entropy : " + str(sum) + f" Entropy: {Hx:.4f}")
 
 if __name__ == "__main__":
     main()

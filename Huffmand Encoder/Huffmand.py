@@ -1,40 +1,53 @@
 import numpy
 import heapq # A Huffman Tree Node 
+import re
 
 class node: 
 	def __init__(self, freq, symbol, left=None, right=None): 
-		# frequency of symbol 
 		self.freq = freq 
 
-		# symbol name (character) 
 		self.symbol = symbol 
-
-		# node left of current node 
+ 
 		self.left = left 
-
-		# node right of current node 
+ 
 		self.right = right 
 
-		# tree direction (0/1) 
 		self.huff = '' 
 
 	def __lt__(self, nxt): 
 		return self.freq < nxt.freq 
 
+def HOFFMAND(EntropyList):
+    char = []
+    freq = []
+    nodes = []
+    for i in EntropyList:
+        char.append(i[0])
+        freq.append(i[1])
+
+    for x in range(len(char)): 
+        heapq.heappush(nodes, node(freq[x], char[x])) 
+
+    while len(nodes) > 1: 
+        left = heapq.heappop(nodes) 
+        right = heapq.heappop(nodes)  
+        left.huff = 0
+        right.huff = 1
+        newNode = node(left.freq+right.freq, left.symbol+right.symbol, left, right) 
+
+        heapq.heappush(nodes, newNode) 
+    sum = EvalueateHuffmand(EntropyList, nodes[0])
+    return sum
+
 def EvalueateHuffmand(EntropyList, node, val=''): 
     total = 0
-	# huffman code for current node 
     newVal = val + str(node.huff) 
 
-    # if node is not an edge node 
-    # then traverse inside it 
     if(node.left): 
         total += EvalueateHuffmand(EntropyList, node.left, newVal) 
     if(node.right): 
         total += EvalueateHuffmand(EntropyList, node.right, newVal) 
 
-        # if node is edge node then 
-        # display its huffman code 
     if(not node.left and not node.right): 
         #print(f"{node.symbol} -> {newVal}") 
         for i in EntropyList:
@@ -47,21 +60,21 @@ def Get_MobyDick_Data(WordsOrCaraktors):
     MobyDickDataArray=[]
     # We wish the data array to be in Caraktors
     if WordsOrCaraktors == "C":
-        print("C")
+        print("Character Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = list(x)   # You can still print the lines if you need to debug
+                    x = list(x)   
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
     # We wish the data array to be in Words
     else:
-        print("Words chousen")
+        print("Words Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = x.split()   # You can still print the lines if you need to debug
+                    x = re.findall(r'[A-Za-z]+|[^A-Za-z]+', x)
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
@@ -97,44 +110,14 @@ def Entropy(Novel):
 
 def main():
     print("Huffman")
-    # Get data from Moby Dick as characters
-    Data = Get_MobyDick_Data("C")
-    # Calculate entropy
+    Data = Get_MobyDick_Data("W") # C = carakters W = Words
+    print("Working On Entropy Calculations ...")
     Hx, EntropyList = Entropy(Data)
     print(f"Entropy: {Hx:.4f}")
-    
-    # Verify the number of unique symbols
-    #print(f"Number of unique symbols: {len(EntropyList)}")
-    
-    # Generate Huffman codes
-    print("Working on HUFFMAND Algurythm ...")
-    char = []
-    freq = []
-    nodes = []
-    for i in EntropyList:
-        char.append(i[0])
-        freq.append(i[1])
-
-    for x in range(len(char)): 
-        heapq.heappush(nodes, node(freq[x], char[x])) 
-
-    while len(nodes) > 1: 
-        # sort all the nodes in ascending order 
-        # based on their frequency 
-        left = heapq.heappop(nodes) 
-        right = heapq.heappop(nodes) 
-        # assign directional value to these nodes 
-        left.huff = 0
-        right.huff = 1
-        # combine the 2 smallest nodes to create 
-        # new node as their parent 
-        newNode = node(left.freq+right.freq, left.symbol+right.symbol, left, right) 
-
-        heapq.heappush(nodes, newNode) 
-    sum = EvalueateHuffmand(EntropyList, nodes[0])
-    print("Huffmand Codes:")
-    print("Algurythm entrop : " + str(sum) + f" Entropy: {Hx:.4f}" )
-# Huffman Tree is ready! 
+    print("Working on HUFFMAND Algorithm ...")
+    sum = HOFFMAND(EntropyList)
+    print("Huffman Codes: can be shown in [def EvalueateHuffmand]")
+    print("Algorithm Entropy : " + str(sum) + f" Entropy: {Hx:.4f}" )
 
 if __name__ == "__main__":
     main()
