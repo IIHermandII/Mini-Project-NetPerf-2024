@@ -1,24 +1,25 @@
 import sys
+import re
 
 def Get_MobyDick_Data(WordsOrCaraktors):
     MobyDickDataArray=[]
     # We wish the data array to be in Caraktors
     if WordsOrCaraktors == "C":
-        print("C")
+        print("Character Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = list(x)   # You can still print the lines if you need to debug
+                    x = list(x)   
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
     # We wish the data array to be in Words
     else:
-        print("Words chousen")
+        print("Words Chosen")
         try:
             with open("Novel\\Moby Dick.txt", "r", encoding="utf-8") as f:
                 for x in f:
-                    x = x.split()   # You can still print the lines if you need to debug
+                    x = re.findall(r'[A-Za-z]+|[^A-Za-z]+', x)
                     MobyDickDataArray.extend(x)
         except UnicodeDecodeError as e:
             print(f"Error reading the file: {e}")
@@ -96,7 +97,7 @@ def main():
         #         0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23
         Novel = ["T","O","B","E","O","R","N","O","T","T","O","B","E","O","R","T","O","B","E","O","R","N","O","T"]
     else:
-        Data = Get_MobyDick_Data("C")
+        Data = Get_MobyDick_Data("W")
         Novel = [item.replace("\n", "Φ") for item in Data] # we cant use \n so we use Φ
         AlphabetOPTZ = sorted(set(Novel))
         Novel.append("")
@@ -107,9 +108,9 @@ def main():
     LZW(AlphabetOPTZ,Novel)
     
     #-------------THE ORIGINAL LZW ALGURYTHM--------------
-    print("working on HOMEBREW LZW: ...")
+    print("working on HOMEBREW LZW: you need to turn on manuly")
     # if Test != 1:
-    LZW_Homebrew(AlphabetHOMB,Novel)
+    #LZW_Homebrew(AlphabetHOMB,Novel)
 
 if __name__ == "__main__":
     main()

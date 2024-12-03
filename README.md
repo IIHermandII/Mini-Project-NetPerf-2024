@@ -9,4 +9,7 @@
   <li>'MINI-PROJECT NETPERF 2024\LZW Encoder\LZW.py'</li>
 </ol> 
 
+#### Task >1 
+Requres a tool like Vertual box to be executed correct.
+The VM we have is to big for github so this will not be fount. if you relly wnat it contact us :)
 

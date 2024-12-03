@@ -103,7 +103,7 @@ def EvalueateShannon(codes, EntropyList):
 
 def main():
     print("Shannon")
-    Data = Get_MobyDick_Data("W") # C = carakters W = Words
+    Data = Get_MobyDick_Data("w") # C = carakters W = Words
     print("Working On Entropy Calculations ...")
     Hx, EntropyList = Entropy(Data)
     print(f"Entropy: {Hx:.4f}")
@@ -111,7 +111,8 @@ def main():
     codes = SHANNON(EntropyList)
     print("Shannon Codes: can be shown in [def EvalueateShannon]")
     sum = EvalueateShannon(codes, EntropyList)
-    print("Algorithm Entropy : " + str(sum) + f" Entropy: {Hx:.4f}")
+    print("Algorithm Entropy : " + f"{sum:.4f}" + f" Entropy: {Hx:.4f}")
+    print("Total number of bits: " + f"{len(Data)*sum:.4f}")
 
 if __name__ == "__main__":
     main()

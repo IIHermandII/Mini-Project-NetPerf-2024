@@ -117,7 +117,8 @@ def main():
     print("Working on HUFFMAND Algorithm ...")
     sum = HOFFMAND(EntropyList)
     print("Huffman Codes: can be shown in [def EvalueateHuffmand]")
-    print("Algorithm Entropy : " + str(sum) + f" Entropy: {Hx:.4f}" )
+    print("Algorithm Entropy : " + f"{sum:.4f}" + f" Entropy: {Hx:.4f}" )
+    print("Total number of bits: " + f"{len(Data)*sum:.4f}")
 
 if __name__ == "__main__":
     main()
